@@ -212,6 +212,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px
   <div class="hdr-r">
     <span class="sync-badge ok" id="syncbadge">Synced</span>
     <button class="btn-sm" onclick="refreshBriefing()">↻ Briefing</button>
+    <button class="btn-sm" onclick="openSettings()" title="API Keys" style="padding:0 8px;">⚙</button>
   </div>
 </header>
 
@@ -406,12 +407,25 @@ function completeSetup(){
   loadApp();
 }
 
+function openSettings(){
+  const overlay=document.getElementById('setupOverlay');
+  const ant=document.getElementById('setup-ant');
+  const sb=document.getElementById('setup-sb');
+  if(API_KEY) ant.value=API_KEY;
+  if(SB_KEY) sb.value=SB_KEY;
+  document.getElementById('setup-err').style.display='none';
+  overlay.style.display='flex';
+}
+
 async function init(){
   setDate();
   API_KEY=localStorage.getItem('pa_anthropic_key')||'';
   SB_KEY=localStorage.getItem('pa_supabase_key')||'';
   if(!API_KEY||!SB_KEY){
-    document.getElementById('setupOverlay').style.display='flex';
+    setTimeout(function(){
+      const overlay=document.getElementById('setupOverlay');
+      if(overlay) overlay.style.display='flex';
+    },100);
     return;
   }
   loadApp();
@@ -851,7 +865,7 @@ init();
       <input id="setup-sb" type="password" placeholder="sb_publishable_..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-family:var(--fm);font-size:12px;padding:9px 12px;outline:none;" />
     </div>
 
-    <button onclick="completeSetup()" style="background:var(--accent);border:none;color:#fff;padding:10px 24px;border-radius:7px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;width:100%;">Get started</button>
+    <button onclick="completeSetup()" style="background:var(--accent);border:none;color:#fff;padding:10px 24px;border-radius:7px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;width:100%;">Save &amp; continue</button>
     <div id="setup-err" style="display:none;margin-top:10px;font-size:12px;color:var(--q1);text-align:center;"></div>
   </div>
 </div>
